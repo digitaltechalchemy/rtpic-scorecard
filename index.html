@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RTPIC Passive Income Scorecard</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,400&display=swap');
+
+:root {
+  --ag: #18442B; --dg: #49654C; --ao: #FAC090; --iv: #E8E0C5;
+  --teal: #0F6E56; --tl: #E1F5EE; --tc: #9FE1CB;
+  --gold: #8B6914; --gl: #FDF5DC; --gc: #FAC775;
+  --purple: #4A3A8A; --pl: #EDE8F8;
+  --blue: #1A3A5C; --bl: #D6E8F7;
+  --coral: #993C1D; --cl2: #FAECE7;
+  --bg: #F4F1EA; --card: #FFFEFB; --border: #E0DAD0;
+  --text: #1A1A18; --muted: #6B6760;
+  --radius: 12px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+/* ── MEMBER SELECT SCREEN ── */
+#member-screen {
+  min-height: 100vh;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 40px 20px;
+  background: var(--ag);
+}
+.member-logo {
+  font-family: 'Fraunces', serif;
+  font-size: 13px; font-weight: 300; letter-spacing: 3px;
+  color: rgba(255,255,255,0.5); text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.member-title {
+  font-family: 'Fraunces', serif;
+  font-size: 32px; font-weight: 600; color: #fff;
+  text-align: center; line-height: 1.2; margin-bottom: 6px;
+}
+.member-sub {
+  font-size: 14px; color: var(--ao); margin-bottom: 48px;
+  font-style: italic; text-align: center;
+}
+.member-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px; width: 100%; max-width: 700px;
+}
+.member-btn {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: var(--radius); padding: 20px 16px;
+  cursor: pointer; transition: all 0.2s; text-align: left;
+  position: relative; overflow: hidden;
+}
+.member-btn:hover { background: rgba(255,255,255,0.14); border-color: var(--ao); transform: translateY(-2px); }
+.member-btn .m-name {
+  font-family: 'Fraunces', serif; font-size: 18px; font-weight: 600;
+  color: #fff; display: block; margin-bottom: 3px;
+}
+.member-btn .m-shop { font-size: 12px; color: var(--ao); }
+.member-btn .m-prog {
+  position: absolute; bottom: 0; left: 0; height: 3px;
+  background: var(--ao); border-radius: 0 2px 0 0;
+  transition: width 0.4s ease;
+}
+.member-btn .m-score {
+  position: absolute; top: 16px; right: 14px;
+  font-size: 11px; color: rgba(255,255,255,0.4);
+  font-family: 'Fraunces', serif;
+}
+
+/* ── MAIN APP ── */
+#app { display: none; }
+
+/* ── TOP BAR ── */
+.topbar {
+  background: var(--ag); padding: 0 24px;
+  display: flex; align-items: center; gap: 16px;
+  height: 56px; position: sticky; top: 0; z-index: 100;
+  border-bottom: 2px solid var(--ao);
+}
+.topbar-back {
+  background: none; border: none; cursor: pointer;
+  color: rgba(255,255,255,0.6); font-size: 18px; padding: 4px 8px 4px 0;
+  transition: color 0.2s;
+}
+.topbar-back:hover { color: #fff; }
+.topbar-name {
+  font-family: 'Fraunces', serif; font-size: 18px;
+  font-weight: 600; color: #fff; flex: 1;
+}
+.topbar-shop { font-size: 12px; color: var(--ao); }
+
+/* ── HERO STATS ── */
+.hero {
+  background: var(--ag); padding: 20px 24px 28px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+.stats-row {
+  display: grid; grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px; max-width: 700px;
+}
+.stat-box {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 10px; padding: 14px 16px;
+}
+.stat-box .s-label { font-size: 10px; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 4px; }
+.stat-box .s-val { font-family: 'Fraunces', serif; font-size: 28px; font-weight: 600; color: var(--ao); line-height: 1; }
+.stat-box .s-sub { font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 2px; }
+.prog-bar-wrap { margin-top: 16px; max-width: 700px; }
+.prog-bar-label { display: flex; justify-content: space-between; font-size: 11px; color: rgba(255,255,255,0.5); margin-bottom: 6px; }
+.prog-bar-track { height: 8px; background: rgba(255,255,255,0.12); border-radius: 4px; overflow: hidden; }
+.prog-bar-fill { height: 100%; border-radius: 4px; background: var(--ao); transition: width 0.5s ease; }
+.milestone-badge {
+  display: none; margin-top: 12px;
+  background: var(--ao); color: var(--ag);
+  border-radius: 8px; padding: 10px 14px;
+  font-size: 13px; font-weight: 600;
+  align-items: center; gap: 8px;
+}
+.milestone-badge.show { display: flex; }
+
+/* ── PHASE TABS ── */
+.phase-tabs {
+  background: var(--card); border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+  display: flex; gap: 2px; overflow-x: auto;
+  scrollbar-width: none; position: sticky; top: 56px; z-index: 90;
+}
+.phase-tabs::-webkit-scrollbar { display: none; }
+.phase-tab {
+  padding: 12px 16px; font-size: 12px; font-weight: 500;
+  border: none; background: none; cursor: pointer;
+  color: var(--muted); white-space: nowrap;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+}
+.phase-tab:hover { color: var(--text); }
+.phase-tab.active { color: var(--ag); border-bottom-color: var(--ag); font-weight: 600; }
+.phase-tab .tab-count {
+  display: inline-block; background: var(--border);
+  border-radius: 10px; padding: 1px 6px;
+  font-size: 10px; margin-left: 5px;
+}
+.phase-tab.active .tab-count { background: var(--iv); color: var(--ag); }
+
+/* ── TASKS ── */
+.task-section { padding: 20px 24px 60px; max-width: 780px; }
+.phase-block { margin-bottom: 8px; }
+.phase-block.hidden { display: none; }
+
+.phase-header-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 16px 0 10px;
+}
+.phase-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.phase-name {
+  font-family: 'Fraunces', serif; font-size: 17px;
+  font-weight: 600; color: var(--text); flex: 1;
+}
+.phase-pct { font-size: 11px; color: var(--muted); }
+.phase-mini-bar { height: 3px; background: var(--border); border-radius: 2px; margin: 0 0 12px 20px; overflow: hidden; }
+.phase-mini-fill { height: 100%; border-radius: 2px; transition: width 0.4s; }
+
+/* Task card */
+.task-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius); margin-bottom: 8px;
+  transition: all 0.2s; overflow: hidden;
+}
+.task-card:hover { border-color: #C8C2B8; box-shadow: 0 2px 10px rgba(0,0,0,0.06); }
+.task-card.done { background: #F6F4EE; border-color: #D8D4CA; }
+.task-card.done .task-name { text-decoration: line-through; color: var(--muted); }
+.task-card.milestone-task { border-left: 3px solid var(--ao); }
+
+.task-main {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 13px 14px; cursor: pointer; user-select: none;
+}
+.check-wrap {
+  width: 22px; height: 22px; border-radius: 6px;
+  border: 2px solid var(--border); flex-shrink: 0; margin-top: 1px;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s; background: white;
+}
+.task-card.done .check-wrap { background: var(--ag); border-color: var(--ag); }
+.check-wrap svg { display: none; }
+.task-card.done .check-wrap svg { display: block; }
+
+.task-body { flex: 1; min-width: 0; }
+.task-num { font-size: 10px; color: var(--muted); margin-bottom: 2px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
+.task-name { font-size: 14px; font-weight: 500; color: var(--text); line-height: 1.4; }
+.task-desc { font-size: 12px; color: var(--muted); margin-top: 4px; line-height: 1.5; }
+
+/* Status badge on right */
+.task-status-wrap { flex-shrink: 0; }
+.status-pill {
+  font-size: 10px; font-weight: 600; padding: 3px 10px;
+  border-radius: 10px; text-transform: uppercase; letter-spacing: 0.4px;
+  cursor: pointer; transition: all 0.15s; border: none; white-space: nowrap;
+}
+.status-not-started { background: var(--border); color: var(--muted); }
+.status-in-progress  { background: var(--bl);    color: var(--blue);   }
+.status-complete     { background: var(--tl);    color: var(--teal);   }
+.status-blocked      { background: #FFEEEE;      color: #A02020;       }
+
+/* Notes area */
+.task-notes-wrap {
+  border-top: 1px solid var(--border); padding: 10px 14px 10px 48px;
+  display: none;
+}
+.task-card.notes-open .task-notes-wrap { display: block; }
+.notes-label { font-size: 10px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 5px; }
+.notes-input {
+  width: 100%; background: var(--bg); border: 1px solid var(--border);
+  border-radius: 8px; padding: 8px 10px; font-size: 13px;
+  font-family: 'DM Sans', sans-serif; color: var(--text);
+  resize: vertical; min-height: 60px; outline: none;
+  transition: border-color 0.2s;
+}
+.notes-input:focus { border-color: var(--dg); }
+.notes-input::placeholder { color: #B0A898; }
+.resource-link {
+  font-size: 11px; color: var(--blue); margin-top: 6px;
+  display: block; text-decoration: none;
+}
+.resource-link:hover { text-decoration: underline; }
+
+/* Notes toggle hint */
+.notes-hint {
+  font-size: 10px; color: var(--muted); margin-top: 4px;
+  cursor: pointer; display: inline-block;
+}
+.notes-hint:hover { color: var(--text); }
+
+/* ── ALL VIEW ── */
+#all-progress {
+  padding: 20px 24px 60px; max-width: 780px;
+  display: none;
+}
+.member-row {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 14px 16px;
+  margin-bottom: 10px;
+}
+.member-row-name { font-weight: 600; font-size: 15px; margin-bottom: 6px; }
+.member-row-shop { font-size: 11px; color: var(--muted); margin-bottom: 8px; }
+.member-row-bars { display: flex; gap: 10px; align-items: center; }
+.bar-label { font-size: 11px; color: var(--muted); width: 90px; flex-shrink: 0; }
+.bar-track { flex: 1; height: 8px; background: var(--border); border-radius: 4px; overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 4px; transition: width 0.5s; }
+.bar-pct { font-size: 11px; color: var(--muted); width: 34px; text-align: right; flex-shrink: 0; }
+
+/* ── PHASE COLORS ── */
+.col-brand   { background: #5DCAA5; }
+.col-struct  { background: #7F77DD; }
+.col-kit     { background: #EF9F27; }
+.col-brand2  { background: #D85A30; }
+.col-ai      { background: #378ADD; }
+.col-first   { background: #18442B; }
+.col-next    { background: #49654C; }
+.col-income  { background: #C9920A; }
+.col-reviews { background: #D4537E; }
+.col-support { background: #888780; }
+
+/* ── EXPORT ── */
+.export-bar {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  background: var(--card); border-top: 1px solid var(--border);
+  padding: 10px 24px; display: flex; gap: 8px; align-items: center;
+  display: none;
+}
+#app.showing .export-bar { display: flex; }
+.export-btn {
+  background: var(--ag); color: white; border: none;
+  border-radius: 8px; padding: 8px 16px; font-size: 12px;
+  font-family: 'DM Sans', sans-serif; font-weight: 600;
+  cursor: pointer; transition: opacity 0.2s;
+}
+.export-btn:hover { opacity: 0.85; }
+.export-btn.secondary {
+  background: var(--card); color: var(--ag);
+  border: 1px solid var(--border);
+}
+.export-note { font-size: 11px; color: var(--muted); flex: 1; }
+
+@media (max-width: 600px) {
+  .stats-row { grid-template-columns: 1fr 1fr; }
+  .stats-row .stat-box:last-child { display: none; }
+  .topbar, .hero, .task-section { padding-left: 16px; padding-right: 16px; }
+  .phase-tabs { padding: 0 16px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── MEMBER SELECT ── -->
+<div id="member-screen">
+  <div class="member-logo">Rising Tides Passive Income Club</div>
+  <div class="member-title">Passive Income Scorecard</div>
+  <div class="member-sub">Select your name to view your journey</div>
+  <div class="member-grid" id="memberGrid"></div>
+</div>
+
+<!-- ── MAIN APP ── -->
+<div id="app">
+  <div class="topbar">
+    <button class="topbar-back" onclick="showMemberScreen()">&#8592;</button>
+    <div>
+      <div class="topbar-name" id="appName"></div>
+      <div class="topbar-shop" id="appShop"></div>
+    </div>
+    <button class="export-btn secondary" style="font-size:11px;padding:6px 12px" onclick="exportCSV()">Export CSV</button>
+  </div>
+
+  <div class="hero">
+    <div class="stats-row">
+      <div class="stat-box">
+        <div class="s-label">To 1st Product</div>
+        <div class="s-val" id="stat1pct">0%</div>
+        <div class="s-sub" id="stat1frac">0 of 22 tasks</div>
+      </div>
+      <div class="stat-box">
+        <div class="s-label">Overall</div>
+        <div class="s-val" id="statAllPct">0%</div>
+        <div class="s-sub" id="statAllFrac">0 of 45 tasks</div>
+      </div>
+      <div class="stat-box">
+        <div class="s-label">In Progress</div>
+        <div class="s-val" id="statIP">0</div>
+        <div class="s-sub">tasks active</div>
+      </div>
+    </div>
+    <div class="prog-bar-wrap">
+      <div class="prog-bar-label">
+        <span>Journey to 1st Product</span>
+        <span id="progLabel1">0%</span>
+      </div>
+      <div class="prog-bar-track"><div class="prog-bar-fill" id="progBar1" style="width:0%"></div></div>
+    </div>
+    <div class="prog-bar-wrap" style="margin-top:10px">
+      <div class="prog-bar-label">
+        <span>Overall journey (45 tasks)</span>
+        <span id="progLabelAll">0%</span>
+      </div>
+      <div class="prog-bar-track"><div class="prog-bar-fill" id="progBarAll" style="width:0%;background:#5DCAA5"></div></div>
+    </div>
+    <div class="milestone-badge" id="milestone1Badge">
+      🎉 1st Product milestone reached — congratulations!
+    </div>
+    <div class="milestone-badge" id="milestone2Badge" style="margin-top:6px;background:var(--tc);color:var(--teal)">
+      ✓ First dollar of passive income earned!
+    </div>
+  </div>
+
+  <div class="phase-tabs" id="phaseTabs"></div>
+
+  <div class="task-section" id="taskSection"></div>
+</div>
+
+<script>
+// ── DATA ─────────────────────────────────────────────────────────────────────
+
+const MEMBERS = [
+  { id: "joe",    name: "Joe",    shop: "Digital Tech Alchemy" },
+  { id: "ashley", name: "Ashley", shop: "The Capable Mama" },
+  { id: "sue",    name: "Sue",    shop: "WinrocNH" },
+  { id: "sheila", name: "Sheila", shop: "Golden Cove Digital" },
+  { id: "nisha",  name: "Nisha",  shop: "Digital Pink Petal" },
+  { id: "jen",    name: "Jen",    shop: "RTPIC Member" },
+  { id: "kayla",  name: "Kayla",  shop: "RTPIC Member" },
+  { id: "ben",    name: "Ben",    shop: "RTPIC Member" },
+  { id: "bella",  name: "Bella",  shop: "RTPIC Member" },
+];
+
+const TASKS = [
+  { seq:1,  phase:"Brand Foundation",    name:"Online Identity",        desc:"Research Online Identity Names",                                                                  resource:"Online Identity Coach",        milestone:false },
+  { seq:2,  phase:"Brand Foundation",    name:"Confirm Name Availability", desc:"Confirm Domain Name and Gmail Availability",                                                   resource:"Namechk",                      milestone:false },
+  { seq:3,  phase:"Brand Foundation",    name:"Purchase Domain Name",   desc:"Purchase Domain Name for 3 Years (.com if possible)",                                             resource:"Porkbun",                      milestone:false },
+  { seq:4,  phase:"Brand Foundation",    name:"Get Gmail",              desc:"Create Gmail Account (businessname@gmail.com)",                                                   resource:"Create Gmail",                 milestone:false },
+  { seq:5,  phase:"Brand Foundation",    name:"Create Browser Profile", desc:"Create Google Chrome browser profile for your new Gmail",                                         resource:"How to add Chrome Profile",    milestone:false },
+  { seq:6,  phase:"Brand Structure",     name:"Create Etsy Account",    desc:"Create Etsy account with business Gmail in new browser profile (install App on phone)",           resource:"Etsy",                         milestone:false },
+  { seq:7,  phase:"Brand Structure",     name:"Create Canva Account",   desc:"Create Canva account with business Gmail in new browser profile (install App on phone)",          resource:"Canva",                        milestone:false },
+  { seq:8,  phase:"Brand Structure",     name:"Create eRank Account",   desc:"Create eRank account with business Gmail in new browser profile",                                 resource:"eRank",                        milestone:false },
+  { seq:9,  phase:"Brand Structure",     name:"Additional Accounts",    desc:"Create accounts on TikTok, Instagram, YouTube, Pinterest, Facebook, etc.",                        resource:null,                           milestone:false },
+  { seq:10, phase:"Brand Structure",     name:"Create Folder Structure", desc:"Create a folder in your local system for your new business and backup",                          resource:"Organizing Business Files",    milestone:false },
+  { seq:11, phase:"Brand Kit",           name:"Selecting Brand Colors", desc:"Select primary and secondary brand colors (record hex codes)",                                    resource:"Brand Kit Examples",           milestone:false },
+  { seq:12, phase:"Brand Kit",           name:"Select Brand Fonts",     desc:"Select primary and secondary brand fonts (record font names)",                                    resource:"Brand Kit Examples",           milestone:false },
+  { seq:13, phase:"Brand Kit",           name:"Brand Logo",             desc:"Create a brand logo with selected colors, fonts, and imagery",                                    resource:null,                           milestone:false },
+  { seq:14, phase:"Branding",            name:"Your Business Brand Kit", desc:"Create a brand kit for your business and save to a business folder",                            resource:null,                           milestone:false },
+  { seq:15, phase:"Branding",            name:"Brand Business Accounts", desc:"Apply logo and colors to Google, Chrome Profile, Etsy and other accounts",                      resource:"Etsy Shop Launch",             milestone:false },
+  { seq:16, phase:"AI Tools",            name:"Pick 2 AI Tools",        desc:"Select 2 AI tools to use and plan to pay $20/month for at least 1. Gemini AI Pro is best for paid AI with Google integration, more storage and more.", resource:null, milestone:false },
+  { seq:17, phase:"1st Digital Product", name:"Select a Niche",         desc:"Identify a specific person with a specific problem. Pick a niche to focus on.",                  resource:"Digital Product Sales",        milestone:false },
+  { seq:18, phase:"1st Digital Product", name:"eRank Validation",       desc:"Before you build, confirm there is High Demand but Low to Medium Competition.",                  resource:"Digital Product Sales",        milestone:false },
+  { seq:19, phase:"1st Digital Product", name:"Create in Canva",        desc:"Create the 'Better' Product in Canva. Don't just copy what is there — customize it!",            resource:"Creating Digital Product with Canva", milestone:false },
+  { seq:20, phase:"1st Digital Product", name:"Listing Thumbnails",     desc:"Design 'Scroll-Stopping' Thumbnails",                                                             resource:"Digital Product Sales",        milestone:false },
+  { seq:21, phase:"1st Digital Product", name:"Listing SEO",            desc:"Conversational SEO — The 2026 Algorithm",                                                         resource:"Digital Product Sales",        milestone:false },
+  { seq:22, phase:"1st Digital Product", name:"Publish",                desc:"This is a major milestone on your passive income journey. Congratulations!!!",                   resource:"Digital Product Sales",        milestone:true },
+  { seq:23, phase:"1st Digital Product", name:"Sale or Coupon",         desc:"Leveraging Etsy Sales & Coupons for Sustained Promotion",                                        resource:"Digital Product Sales",        milestone:false },
+  { seq:24, phase:"Next Digital Products", name:"Digital Product 2",    desc:"Create the next digital product while thinking about repeating the process for 18 more",        resource:null,                           milestone:false },
+  { seq:25, phase:"Next Digital Products", name:"Digital Product 3",    desc:"Refine your product listing process",                                                             resource:null,                           milestone:false },
+  { seq:26, phase:"Next Digital Products", name:"Digital Product 4",    desc:"Refine your product listing process",                                                             resource:null,                           milestone:false },
+  { seq:27, phase:"Next Digital Products", name:"Digital Product 5",    desc:"Refine your product listing process",                                                             resource:null,                           milestone:false },
+  { seq:28, phase:"Next Digital Products", name:"Digital Product 6",    desc:"Refine your product listing process",                                                             resource:null,                           milestone:false },
+  { seq:29, phase:"Next Digital Products", name:"Digital Product 7",    desc:"Create additional digital product",                                                               resource:null,                           milestone:false },
+  { seq:30, phase:"Next Digital Products", name:"Digital Product 8",    desc:"Create additional digital product",                                                               resource:null,                           milestone:false },
+  { seq:31, phase:"Next Digital Products", name:"Digital Product 9",    desc:"Create additional digital product",                                                               resource:null,                           milestone:false },
+  { seq:32, phase:"Next Digital Products", name:"Digital Product 10",   desc:"Create additional digital product",                                                               resource:null,                           milestone:false },
+  { seq:33, phase:"Next Digital Products", name:"Digital Product 11",   desc:"Create additional digital product",                                                               resource:null,                           milestone:false },
+  { seq:34, phase:"Next Digital Products", name:"Digital Product 12",   desc:"Create additional digital product",                                                               resource:null,                           milestone:false },
+  { seq:35, phase:"Next Digital Products", name:"Digital Product 13",   desc:"Create additional digital product",                                                               resource:null,                           milestone:false },
+  { seq:36, phase:"Next Digital Products", name:"Digital Product 14",   desc:"Create additional digital product",                                                               resource:null,                           milestone:false },
+  { seq:37, phase:"Next Digital Products", name:"Digital Product 15",   desc:"Create additional digital product",                                                               resource:null,                           milestone:false },
+  { seq:38, phase:"Next Digital Products", name:"Digital Product 16",   desc:"Create additional digital product",                                                               resource:null,                           milestone:false },
+  { seq:39, phase:"Next Digital Products", name:"Digital Product 17",   desc:"Create additional digital product",                                                               resource:null,                           milestone:false },
+  { seq:40, phase:"Next Digital Products", name:"Digital Product 18",   desc:"Create additional digital product",                                                               resource:null,                           milestone:false },
+  { seq:41, phase:"Next Digital Products", name:"Digital Product 19",   desc:"Create additional digital product",                                                               resource:null,                           milestone:false },
+  { seq:42, phase:"Next Digital Products", name:"Digital Product 20",   desc:"Create additional digital product",                                                               resource:null,                           milestone:false },
+  { seq:43, phase:"First Passive Income",  name:"Earn First $1",        desc:"Another huge milestone — your first dollar of passive income! Validation that it works!!!",      resource:null,                           milestone:true },
+  { seq:44, phase:"First Product Reviews", name:"First Review",         desc:"Social proof established on the shop.",                                                           resource:null,                           milestone:true },
+  { seq:45, phase:"Customer Support",      name:"Support Plan",         desc:"How will you know if you receive a customer message and how will you respond?",                   resource:null,                           milestone:false },
+];
+
+const PHASE_COLORS = {
+  "Brand Foundation":    "#5DCAA5",
+  "Brand Structure":     "#7F77DD",
+  "Brand Kit":           "#EF9F27",
+  "Branding":            "#D85A30",
+  "AI Tools":            "#378ADD",
+  "1st Digital Product": "#18442B",
+  "Next Digital Products":"#49654C",
+  "First Passive Income":"#C9920A",
+  "First Product Reviews":"#D4537E",
+  "Customer Support":    "#888780",
+};
+
+const PHASES_ORDER = Object.keys(PHASE_COLORS);
+const FIRST_PRODUCT_TASKS = 22;
+const TOTAL_TASKS = 45;
+
+// ── STATE ────────────────────────────────────────────────────────────────────
+
+let currentMember = null;
+
+function key(memberId) { return `rtpic_${memberId}`; }
+
+function loadState(memberId) {
+  try { return JSON.parse(localStorage.getItem(key(memberId)) || '{}'); }
+  catch { return {}; }
+}
+
+function saveState(memberId, state) {
+  localStorage.setItem(key(memberId), JSON.stringify(state));
+}
+
+function getMemberState(memberId) {
+  return loadState(memberId);
+}
+
+function getTaskState(memberId, seq) {
+  const s = loadState(memberId);
+  return {
+    status: s[`s_${seq}`] || 'Not Started',
+    notes:  s[`n_${seq}`] || ''
+  };
+}
+
+function setTaskStatus(memberId, seq, status) {
+  const s = loadState(memberId);
+  s[`s_${seq}`] = status;
+  saveState(memberId, s);
+}
+
+function setTaskNotes(memberId, seq, notes) {
+  const s = loadState(memberId);
+  s[`n_${seq}`] = notes;
+  saveState(memberId, s);
+}
+
+function getMemberStats(memberId) {
+  const s = loadState(memberId);
+  let first = 0, all = 0, inProg = 0;
+  TASKS.forEach(t => {
+    const st = s[`s_${t.seq}`] || 'Not Started';
+    if (st === 'Complete') {
+      all++;
+      if (t.seq <= FIRST_PRODUCT_TASKS) first++;
+    }
+    if (st === 'In Progress') inProg++;
+  });
+  return { first, all, inProg,
+    pct1: Math.round(first / FIRST_PRODUCT_TASKS * 100),
+    pctAll: Math.round(all / TOTAL_TASKS * 100) };
+}
+
+// ── MEMBER SELECT ────────────────────────────────────────────────────────────
+
+function buildMemberGrid() {
+  const grid = document.getElementById('memberGrid');
+  grid.innerHTML = MEMBERS.map(m => {
+    const stats = getMemberStats(m.id);
+    return `
+      <button class="member-btn" onclick="openMember('${m.id}')">
+        <span class="m-name">${m.name}</span>
+        <span class="m-shop">${m.shop}</span>
+        <span class="m-score">${stats.pctAll}%</span>
+        <div class="m-prog" style="width:${stats.pctAll}%"></div>
+      </button>`;
+  }).join('');
+}
+
+function showMemberScreen() {
+  currentMember = null;
+  document.getElementById('member-screen').style.display = 'flex';
+  document.getElementById('app').style.display = 'none';
+  buildMemberGrid();
+}
+
+function openMember(memberId) {
+  currentMember = memberId;
+  const m = MEMBERS.find(x => x.id === memberId);
+  document.getElementById('appName').textContent = m.name;
+  document.getElementById('appShop').textContent = m.shop;
+  document.getElementById('member-screen').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  buildPhaseTabs();
+  renderTasks('All');
+  updateHero();
+}
+
+// ── HERO ─────────────────────────────────────────────────────────────────────
+
+function updateHero() {
+  const s = getMemberStats(currentMember);
+  document.getElementById('stat1pct').textContent    = s.pct1 + '%';
+  document.getElementById('stat1frac').textContent   = `${s.first} of ${FIRST_PRODUCT_TASKS} tasks`;
+  document.getElementById('statAllPct').textContent  = s.pctAll + '%';
+  document.getElementById('statAllFrac').textContent = `${s.all} of ${TOTAL_TASKS} tasks`;
+  document.getElementById('statIP').textContent      = s.inProg;
+  document.getElementById('progBar1').style.width    = s.pct1 + '%';
+  document.getElementById('progBarAll').style.width  = s.pctAll + '%';
+  document.getElementById('progLabel1').textContent  = s.pct1 + '%';
+  document.getElementById('progLabelAll').textContent= s.pctAll + '%';
+
+  const st = loadState(currentMember);
+  const pub = st['s_22'] === 'Complete';
+  const inc = st['s_43'] === 'Complete';
+  document.getElementById('milestone1Badge').classList.toggle('show', pub);
+  document.getElementById('milestone2Badge').classList.toggle('show', inc);
+}
+
+// ── PHASE TABS ───────────────────────────────────────────────────────────────
+
+let activePhase = 'All';
+
+function buildPhaseTabs() {
+  const tabs = document.getElementById('phaseTabs');
+  const phases = ['All', ...PHASES_ORDER];
+  tabs.innerHTML = phases.map(ph => {
+    let count = '';
+    if (ph !== 'All') {
+      const s = loadState(currentMember);
+      const pTasks = TASKS.filter(t => t.phase === ph);
+      const done = pTasks.filter(t => (s[`s_${t.seq}`] || '') === 'Complete').length;
+      count = `<span class="tab-count">${done}/${pTasks.length}</span>`;
+    }
+    return `<button class="phase-tab${ph === activePhase ? ' active' : ''}" onclick="switchTab('${ph}')">${ph}${count}</button>`;
+  }).join('');
+}
+
+function switchTab(phase) {
+  activePhase = phase;
+  buildPhaseTabs();
+  renderTasks(phase);
+}
+
+// ── TASK RENDER ───────────────────────────────────────────────────────────────
+
+const STATUS_OPTIONS = ['Not Started', 'In Progress', 'Complete', 'Blocked'];
+const STATUS_CLASSES = {
+  'Not Started': 'status-not-started',
+  'In Progress':  'status-in-progress',
+  'Complete':     'status-complete',
+  'Blocked':      'status-blocked',
+};
+
+function renderTasks(phase) {
+  const section = document.getElementById('taskSection');
+  const phases = phase === 'All' ? PHASES_ORDER : [phase];
+  const s = loadState(currentMember);
+
+  section.innerHTML = phases.map(ph => {
+    const pTasks = TASKS.filter(t => t.phase === ph);
+    const done = pTasks.filter(t => (s[`s_${t.seq}`] || '') === 'Complete').length;
+    const pct = Math.round(done / pTasks.length * 100);
+    const color = PHASE_COLORS[ph] || '#888';
+
+    const taskHTML = pTasks.map(t => {
+      const status = s[`s_${t.seq}`] || 'Not Started';
+      const notes  = s[`n_${t.seq}`] || '';
+      const isDone = status === 'Complete';
+      const hasNotes = notes.length > 0;
+
+      return `
+        <div class="task-card${isDone ? ' done' : ''}${t.milestone ? ' milestone-task' : ''}" id="tc_${t.seq}">
+          <div class="task-main" onclick="toggleNotes(${t.seq})">
+            <div class="check-wrap" onclick="event.stopPropagation();cycleStatus(${t.seq})">
+              <svg width="12" height="9" viewBox="0 0 12 9" fill="none">
+                <path d="M1 4.5L4 7.5L11 1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div class="task-body">
+              <div class="task-num">Task ${t.seq} · ${ph}</div>
+              <div class="task-name">${t.name}</div>
+              <div class="task-desc">${t.desc}</div>
+              ${hasNotes ? `<div class="notes-hint">📝 ${notes.substring(0,60)}${notes.length>60?'…':''}</div>` : '<div class="notes-hint" style="opacity:0.4">+ add notes</div>'}
+            </div>
+            <div class="task-status-wrap" onclick="event.stopPropagation()">
+              <button class="status-pill ${STATUS_CLASSES[status]}" onclick="cycleStatus(${t.seq})">${status}</button>
+            </div>
+          </div>
+          <div class="task-notes-wrap">
+            <div class="notes-label">My notes & progress</div>
+            <textarea class="notes-input" placeholder="Add your notes, links, questions..." 
+              onchange="saveNotes(${t.seq}, this.value)"
+              oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'"
+            >${notes}</textarea>
+            ${t.resource ? `<span class="resource-link">📚 Resource: ${t.resource}</span>` : ''}
+          </div>
+        </div>`;
+    }).join('');
+
+    return `
+      <div class="phase-block" id="pb_${ph.replace(/\s/g,'_')}">
+        <div class="phase-header-row">
+          <div class="phase-dot" style="background:${color}"></div>
+          <div class="phase-name">${ph}</div>
+          <div class="phase-pct">${done}/${pTasks.length} · ${pct}%</div>
+        </div>
+        <div class="phase-mini-bar">
+          <div class="phase-mini-fill" style="background:${color};width:${pct}%"></div>
+        </div>
+        ${taskHTML}
+      </div>`;
+  }).join('');
+}
+
+function toggleNotes(seq) {
+  const card = document.getElementById(`tc_${seq}`);
+  card.classList.toggle('notes-open');
+  if (card.classList.contains('notes-open')) {
+    const ta = card.querySelector('.notes-input');
+    if (ta) { ta.style.height = 'auto'; ta.style.height = ta.scrollHeight + 'px'; }
+  }
+}
+
+function cycleStatus(seq) {
+  const s = loadState(currentMember);
+  const cur = s[`s_${seq}`] || 'Not Started';
+  const idx = STATUS_OPTIONS.indexOf(cur);
+  const next = STATUS_OPTIONS[(idx + 1) % STATUS_OPTIONS.length];
+  s[`s_${seq}`] = next;
+  saveState(currentMember, s);
+  renderTasks(activePhase);
+  buildPhaseTabs();
+  updateHero();
+  buildMemberGrid();
+}
+
+function saveNotes(seq, val) {
+  const s = loadState(currentMember);
+  s[`n_${seq}`] = val;
+  saveState(currentMember, s);
+}
+
+// ── EXPORT ───────────────────────────────────────────────────────────────────
+
+function exportCSV() {
+  const m = MEMBERS.find(x => x.id === currentMember);
+  const s = loadState(currentMember);
+  const rows = [['Seq','Phase','Task','Description','Status','Notes']];
+  TASKS.forEach(t => {
+    rows.push([
+      t.seq, t.phase, t.name, t.desc,
+      s[`s_${t.seq}`] || 'Not Started',
+      (s[`n_${t.seq}`] || '').replace(/\n/g,' ')
+    ]);
+  });
+  const csv = rows.map(r => r.map(c => `"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const blob = new Blob([csv], {type:'text/csv'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = `RTPIC_${m.name}_Scorecard.csv`;
+  a.click(); URL.revokeObjectURL(url);
+}
+
+// ── INIT ─────────────────────────────────────────────────────────────────────
+
+buildMemberGrid();
+</script>
+</body>
+</html>
