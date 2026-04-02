@@ -1,0 +1,470 @@
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Source+Sans+3:wght@400;500;600&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  .page {
+    font-family: 'Source Sans 3', sans-serif;
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 3rem;
+    color: var(--color-text-primary);
+  }
+
+  .header {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 0.5px solid var(--color-border-tertiary);
+  }
+
+  .logo-mark {
+    width: 52px;
+    height: 52px;
+    border-radius: 12px;
+    background: #18442B;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .logo-mark svg { width: 28px; height: 28px; }
+
+  .header-text h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    line-height: 1.2;
+    margin-bottom: 4px;
+  }
+
+  .header-text p {
+    font-size: 13px;
+    color: var(--color-text-secondary);
+  }
+
+  .badge {
+    display: inline-block;
+    background: #FAC090;
+    color: #4A1B0C;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-top: 6px;
+  }
+
+  .section-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-text-secondary);
+    margin-bottom: 0.75rem;
+  }
+
+  .pipeline {
+    margin-bottom: 2rem;
+  }
+
+  .pipeline-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+    margin-bottom: 0.5rem;
+  }
+
+  .p-card {
+    background: var(--color-background-primary);
+    border: 0.5px solid var(--color-border-tertiary);
+    border-radius: var(--border-radius-md);
+    padding: 10px 10px 12px;
+    position: relative;
+  }
+
+  .p-card .step-num {
+    font-size: 10px;
+    font-weight: 600;
+    color: #49654C;
+    margin-bottom: 4px;
+    letter-spacing: 0.06em;
+  }
+
+  .p-card .step-name {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--color-text-primary);
+    line-height: 1.3;
+  }
+
+  .p-card .step-tool {
+    font-size: 11px;
+    color: var(--color-text-secondary);
+    margin-top: 4px;
+  }
+
+  .p-card.claude-card {
+    border-color: #49654C;
+    background: #E8E0C510;
+  }
+
+  .p-card.human-card {
+    border-color: #FAC090;
+    background: #FAC09010;
+  }
+
+  .legend {
+    display: flex;
+    gap: 1.5rem;
+    font-size: 12px;
+    color: var(--color-text-secondary);
+    margin-top: 0.5rem;
+  }
+
+  .legend-dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 5px;
+    vertical-align: middle;
+  }
+
+  .three-col {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+    margin-bottom: 2rem;
+  }
+
+  .info-card {
+    background: var(--color-background-primary);
+    border: 0.5px solid var(--color-border-tertiary);
+    border-radius: var(--border-radius-lg);
+    padding: 1rem 1rem 1.1rem;
+  }
+
+  .info-card .ic-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+    font-size: 16px;
+  }
+
+  .info-card h3 {
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 8px;
+    color: var(--color-text-primary);
+  }
+
+  .info-card ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .info-card ul li {
+    font-size: 12px;
+    color: var(--color-text-secondary);
+    padding: 3px 0;
+    padding-left: 14px;
+    position: relative;
+    line-height: 1.4;
+  }
+
+  .info-card ul li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 9px;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: #49654C;
+  }
+
+  .handoffs {
+    margin-bottom: 2rem;
+  }
+
+  .handoff-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .handoff-chip {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border: 0.5px solid #FAC090;
+    border-radius: var(--border-radius-md);
+    padding: 8px 14px;
+    font-size: 13px;
+    background: var(--color-background-primary);
+  }
+
+  .handoff-chip .chip-num {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #FAC090;
+    color: #4A1B0C;
+    font-size: 11px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .handoff-chip .chip-label {
+    font-weight: 500;
+    color: var(--color-text-primary);
+  }
+
+  .handoff-chip .chip-action {
+    font-size: 11px;
+    color: var(--color-text-secondary);
+  }
+
+  .stat-row {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+    margin-bottom: 2rem;
+  }
+
+  .stat-card {
+    background: var(--color-background-secondary);
+    border-radius: var(--border-radius-md);
+    padding: 1rem;
+    text-align: center;
+  }
+
+  .stat-card .stat-num {
+    font-size: 26px;
+    font-weight: 500;
+    color: #18442B;
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  .stat-card .stat-label {
+    font-size: 12px;
+    color: var(--color-text-secondary);
+  }
+
+  .footer {
+    border-top: 0.5px solid var(--color-border-tertiary);
+    padding-top: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: gap;
+  }
+
+  .footer p {
+    font-size: 12px;
+    color: var(--color-text-secondary);
+  }
+
+  .footer .dta-tag {
+    font-size: 12px;
+    font-weight: 500;
+    color: #18442B;
+  }
+
+  @media (max-width: 600px) {
+    .pipeline-grid { grid-template-columns: repeat(2, 1fr); }
+    .three-col { grid-template-columns: 1fr 1fr; }
+    .stat-row { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+
+<div class="page">
+
+  <div class="header">
+    <div class="logo-mark">
+      <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="14" cy="14" r="10" stroke="#FAC090" stroke-width="1.5"/>
+        <path d="M9 18L14 8L19 18" stroke="#A4BDBA" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M10.5 15h7" stroke="#A4BDBA" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="header-text">
+      <h1>Automating your Etsy digital product business with Claude AI</h1>
+      <p>Digital Tech Alchemy · Rising Tides Passive Income Club · April 2026</p>
+      <span class="badge">RTPIC Member Resource</span>
+    </div>
+  </div>
+
+  <div class="pipeline">
+    <div class="section-label">The 13-step Etsy Product Factory — where Claude works</div>
+    <div class="pipeline-grid">
+      <div class="p-card claude-card">
+        <div class="step-num">01 · Research</div>
+        <div class="step-name">Niche & keyword research</div>
+        <div class="step-tool">Claude · no tools needed</div>
+      </div>
+      <div class="p-card claude-card">
+        <div class="step-num">02 · Strategy</div>
+        <div class="step-name">Product concept & outline</div>
+        <div class="step-tool">Claude</div>
+      </div>
+      <div class="p-card claude-card">
+        <div class="step-num">03 · Content</div>
+        <div class="step-name">Full product content</div>
+        <div class="step-tool">Claude</div>
+      </div>
+      <div class="p-card claude-card">
+        <div class="step-num">04 · Build</div>
+        <div class="step-name">Generate file (PDF/XLSX)</div>
+        <div class="step-tool">Claude · Python script</div>
+      </div>
+      <div class="p-card human-card">
+        <div class="step-num">05 · Design ✋</div>
+        <div class="step-name">Visual polish & cover</div>
+        <div class="step-tool">You · Canva</div>
+      </div>
+      <div class="p-card claude-card">
+        <div class="step-num">06 · SEO</div>
+        <div class="step-name">Title, tags & description</div>
+        <div class="step-tool">Claude</div>
+      </div>
+      <div class="p-card claude-card">
+        <div class="step-num">07 · Thumbnail</div>
+        <div class="step-name">Mockup image script</div>
+        <div class="step-tool">Claude · Python/Pillow</div>
+      </div>
+      <div class="p-card human-card">
+        <div class="step-num">08 · Video ✋</div>
+        <div class="step-name">Promo video edit</div>
+        <div class="step-tool">You · CapCut</div>
+      </div>
+      <div class="p-card claude-card">
+        <div class="step-num">09 · Listing</div>
+        <div class="step-name">Listing copy (final)</div>
+        <div class="step-tool">Claude</div>
+      </div>
+      <div class="p-card human-card">
+        <div class="step-num">10 · Publish ✋</div>
+        <div class="step-name">Upload & list on Etsy</div>
+        <div class="step-tool">You · Etsy dashboard</div>
+      </div>
+      <div class="p-card claude-card">
+        <div class="step-num">11 · Promote</div>
+        <div class="step-name">Social & email content</div>
+        <div class="step-tool">Claude</div>
+      </div>
+      <div class="p-card claude-card">
+        <div class="step-num">12–13 · Iterate</div>
+        <div class="step-name">Optimize & bundle</div>
+        <div class="step-tool">Claude</div>
+      </div>
+    </div>
+    <div class="legend">
+      <span><span class="legend-dot" style="background:#49654C;"></span>Claude handles it</span>
+      <span><span class="legend-dot" style="background:#FAC090;"></span>Human hand-off (only 3!)</span>
+    </div>
+  </div>
+
+  <div class="three-col">
+    <div class="info-card">
+      <div class="ic-icon" style="background:#E8F4EB;">📄</div>
+      <h3>What Claude creates</h3>
+      <ul>
+        <li>PDF workbooks & planners</li>
+        <li>Excel trackers (XLSX)</li>
+        <li>Ebooks & guides (.docx)</li>
+        <li>Printable bundles</li>
+        <li>Branded thumbnails</li>
+        <li>SEO listing copy</li>
+        <li>Social media content</li>
+      </ul>
+    </div>
+    <div class="info-card">
+      <div class="ic-icon" style="background:#FFF3EA;">⚡</div>
+      <h3>How the factory runs</h3>
+      <ul>
+        <li>Structured prompt inputs</li>
+        <li>Each step = one Claude session</li>
+        <li>Python scripts for file gen</li>
+        <li>Consistent brand output</li>
+        <li>Full SOPs for repeatability</li>
+        <li>No eRank, no Axiom needed</li>
+      </ul>
+    </div>
+    <div class="info-card">
+      <div class="ic-icon" style="background:#E8F0F4;">🎯</div>
+      <h3>Keys to success</h3>
+      <ul>
+        <li>Treat Claude as a pipeline</li>
+        <li>Give it structured inputs</li>
+        <li>Review before hand-offs</li>
+        <li>Brand everything consistently</li>
+        <li>Batch products in series</li>
+        <li>Document your prompts</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="handoffs" style="margin-bottom:2rem;">
+    <div class="section-label">Your 3 human hand-off points</div>
+    <div class="handoff-row">
+      <div class="handoff-chip">
+        <div class="chip-num">1</div>
+        <div>
+          <div class="chip-label">Visual design</div>
+          <div class="chip-action">Canva — cover & mockup polish</div>
+        </div>
+      </div>
+      <div class="handoff-chip">
+        <div class="chip-num">2</div>
+        <div>
+          <div class="chip-label">Video edit</div>
+          <div class="chip-action">CapCut — promo clip assembly</div>
+        </div>
+      </div>
+      <div class="handoff-chip">
+        <div class="chip-num">3</div>
+        <div>
+          <div class="chip-label">Etsy publish</div>
+          <div class="chip-action">Etsy dashboard — upload & go live</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="stat-row">
+    <div class="stat-card">
+      <span class="stat-num">~80%</span>
+      <span class="stat-label">of pipeline steps handled by Claude</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-num">3</span>
+      <span class="stat-label">human hand-offs per product</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-num">20</span>
+      <span class="stat-label">products goal · April Acceleration</span>
+    </div>
+  </div>
+
+  <div class="footer">
+    <p>Rising Tides Passive Income Club · Thursday sessions · For member use only</p>
+    <span class="dta-tag">Digital Tech Alchemy</span>
+  </div>
+
+</div>
